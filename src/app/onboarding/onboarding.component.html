@@ -1,0 +1,352 @@
+<div class="page">
+    <div class="container">
+  
+        <div class="demo-badge">
+            DEMO
+          </div>
+
+          
+      <!-- Header -->
+      <header class="header">
+      
+
+        <h1>Stallion Asset PMS Onboarding</h1>
+        <span>SEBI Registered Portfolio Management Services</span>
+      </header>
+  
+      <!-- Card -->
+      <div class="card">
+  
+  
+        <!-- About -->
+        <section class="about">
+          <h2>About Stallion Asset</h2>
+          <p>
+            Stallion Asset Pvt. Ltd. is a SEBI-registered Portfolio Management firm
+            managing over <strong>₹4,500+ Crores</strong> across
+            <strong>4,000+ clients</strong>, following a disciplined
+            growth-investing approach for long-term wealth creation.
+          </p>
+        </section>
+
+  
+        <!-- Form -->
+        <form [formGroup]="form" class="form" novalidate>
+  
+          <h3>Investor Onboaring</h3>
+
+  
+          <div class="grid">
+  
+            <!-- Investor Type -->
+           <!-- Investor Type -->
+<div class="field">
+    <label>Investor Type</label>
+  
+    <div class="chip-group">
+      <button
+        type="button"
+        class="chip"
+        *ngFor="let t of investorTypes"
+        [class.active]="form.value.investorType === t"
+        (click)="form.patchValue({ investorType: t })"
+      >
+        {{ t }}
+      </button>
+    </div>
+  
+    <small *ngIf="f.investorType.touched && f.investorType.errors?.['required']">
+      Investor type is required
+    </small>
+  </div>
+  
+  
+            <!-- Name -->
+            <div class="field">
+              <label>Name / Entity Name</label>
+              <input type="text" formControlName="name" />
+              <small *ngIf="f.name.touched && f.name.errors?.['required']">
+                Name is required
+              </small>
+              <small *ngIf="f.name.touched && f.name.errors?.['minlength']">
+                Minimum 3 characters required
+              </small>
+            </div>
+  
+            <!-- PAN -->
+            <div class="field">
+              <label>PAN</label>
+              <input type="text" formControlName="pan" style="text-transform: uppercase" />
+              <small *ngIf="f.pan.touched && f.pan.errors?.['required']">
+                PAN is required
+              </small>
+              <small *ngIf="f.pan.touched && f.pan.errors?.['pattern']">
+                Invalid PAN format
+              </small>
+            </div>
+  
+            <!-- Email -->
+            <div class="field">
+              <label>Email</label>
+              <input type="email" formControlName="email" />
+              <small *ngIf="f.email.touched && f.email.errors?.['required']">
+                Email is required
+              </small>
+              <small *ngIf="f.email.touched && f.email.errors?.['email']">
+                Invalid email address
+              </small>
+            </div>
+  
+            <!-- Mobile -->
+            <div class="field">
+              <label>Mobile</label>
+              <input type="tel" formControlName="mobile" />
+              <small *ngIf="f.mobile.touched && f.mobile.errors?.['required']">
+                Mobile number is required
+              </small>
+              <small *ngIf="f.mobile.touched && f.mobile.errors?.['pattern']">
+                Enter valid 10-digit number
+              </small>
+            </div>
+  
+          </div>
+  
+          <br> 
+          <!-- Investment Amount -->
+<div class="field">
+    <label>Investment Amount (₹)</label>
+    <input
+      type="number"
+      formControlName="amount"
+      placeholder="Minimum ₹50,00,000"
+    />
+    <small *ngIf="f.amount.touched && f.amount.errors?.['required']">
+      Investment amount is required
+    </small>
+    <small *ngIf="f.amount.touched && f.amount.errors?.['min']">
+      Minimum investment is ₹50,00,000
+    </small>
+  </div>
+
+  <br>
+
+ 
+  <!-- Investment Horizon -->
+<div class="field">
+    <label>Investment Horizon</label>
+  
+    <div class="chip-group">
+      <button
+        type="button"
+        class="chip"
+        *ngFor="let h of investmentHorizons"
+        [class.active]="form.value.horizon === h"
+        (click)="form.patchValue({ horizon: h })"
+      >
+        {{ h }}
+      </button>
+    </div>
+  
+    <small *ngIf="f.horizon.touched && f.horizon.errors?.['required']">
+      Investment horizon is required
+    </small>
+  </div>
+  
+          <!-- Plans -->
+          <div class="plans">
+            <div
+              class="plan"
+              [class.active]="form.value.plan === 'PLAN_A'"
+              (click)="form.patchValue({ plan: 'PLAN_A' })"
+            >
+              <h4>Plan A</h4>
+              <p class="price">1.5% Fixed Fee</p>
+              <span>15% profit sharing</span>
+            </div>
+  
+            <div
+              class="plan"
+              [class.active]="form.value.plan === 'PLAN_B'"
+              (click)="form.patchValue({ plan: 'PLAN_B' })"
+            >
+              <h4>Plan B</h4>
+              <p class="price">2.5% Fixed Fee</p>
+              <span>No profit sharing</span>
+            </div>
+          </div>
+  
+          <small class="plan-error" *ngIf="f.plan.touched && f.plan.errors?.['required']">
+            Please select a PMS plan
+          </small>
+  
+          <!-- Submit -->
+          <div class="submit">
+            <button type="button" (click)="submit()">Submit Application</button>
+          </div>
+
+    
+
+          <button
+          type="button"
+          class="check-leads-btn"
+          (click)="scrollToLeads()"
+        >
+          Check Leads
+        </button>
+  
+        </form>
+      </div>
+  
+
+      <!-- CHATBOT FAB -->
+<div class="chatbot-fab" (click)="toggleChatbot()">
+    💬
+  </div>
+  
+  <!-- CHATBOT WINDOW -->
+  <div class="chatbot" [class.open]="chatbotOpen">
+  
+    <div class="chatbot-header">
+      <span>Stallion AI Assistant demo</span>
+      <button (click)="toggleChatbot()">✕</button>
+    </div>
+  
+    <div class="chatbot-body">
+  
+      <div class="bot-msg">
+        👋 Hi! I can help you with PMS onboarding.
+      </div>
+  
+      <div class="quick-questions">
+        <button (click)="selectQuestion('minInvestment')">
+          What is the minimum investment?
+        </button>
+  
+        <button (click)="selectQuestion('plans')">
+          Difference between Plan A & B?
+        </button>
+  
+        <button (click)="selectQuestion('timeline')">
+          How long does onboarding take?
+        </button>
+  
+        <button (click)="selectQuestion('sebi')">
+          Is Stallion SEBI registered?
+        </button>
+      </div>
+  
+      <div *ngIf="chatbotAnswer" class="bot-msg answer">
+        {{ chatbotAnswer }}
+      </div>
+  
+    </div>
+  
+  </div>
+  
+     <!-- LEADS VIEW -->
+<section
+id="leadsSection"
+class="leads-card"
+*ngIf="savedLead"
+>
+<div class="leads-header">
+  <h3>Saved Lead</h3>
+  <span class="lead-badge">Session Data</span>
+</div>
+
+<div class="lead-grid">
+  <div class="lead-item">
+    <span>Investor Type</span>
+    <strong>{{ savedLead.investorType }}</strong>
+  </div>
+
+  <div class="lead-item">
+    <span>Name</span>
+    <strong>{{ savedLead.name }}</strong>
+  </div>
+
+  <div class="lead-item">
+    <span>PAN</span>
+    <strong>{{ savedLead.pan }}</strong>
+  </div>
+
+  <div class="lead-item">
+    <span>Email</span>
+    <strong>{{ savedLead.email }}</strong>
+  </div>
+
+  <div class="lead-item">
+    <span>Mobile</span>
+    <strong>{{ savedLead.mobile }}</strong>
+  </div>
+
+  <div class="lead-item highlight">
+    <span>PMS Plan</span>
+    <strong>{{ savedLead.plan }}</strong>
+  </div>
+</div>
+</section>
+
+  
+    </div>
+  </div>
+  
+  <footer class="footer">
+    <div class="footer-container">
+  
+      <!-- Top Section -->
+      <div class="footer-top">
+  
+        <!-- Brand -->
+        <div class="footer-brand">
+          <!-- <img src="/assets/logo.svg" alt="Stallion Asset" class="footer-logo" /> -->
+          <p class="footer-meta">
+            CIN: U65990MH2018PTC305551<br />
+            PMS SEBI Reg. No.: INP000006129
+          </p>
+          <p class="footer-address">
+            5th Floor, Jet Prime Building, Suren Road, Gundavali,<br />
+            Andheri East, Mumbai, Maharashtra 400093
+          </p>
+        </div>
+  
+        <!-- Links -->
+        <div class="footer-links">
+          <a href="#">Home</a>
+          <a href="#">About Us</a>
+          <a href="#">PMS Performance</a>
+          <a href="#">Investment Philosophy</a>
+          <a href="#">Blog</a>
+          <a href="#">Media</a>
+        </div>
+  
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Disclaimer</a>
+          <a href="#">Terms</a>
+          <a href="#">Corporate Details</a>
+        </div>
+  
+      </div>
+  
+      <!-- Compliance -->
+      <div class="footer-compliance">
+        <p>
+          The Investor can lodge a complaint directly with us via email at
+          <strong>support-stallionasset.com</strong>. In case you are not satisfied
+          with our response, you may lodge your grievance with SEBI at
+          <a href="https://scores.sebi.gov.in" target="_blank">https://scores.sebi.gov.in</a>
+          or via the SCORES mobile app. For further escalation, initiate online
+          dispute resolution through the
+          <a href="https://smartodr.sebi.gov.in" target="_blank">SMART ODR Portal</a>.
+        </p>
+      </div>
+  
+      <!-- Bottom -->
+      <div class="footer-bottom">
+        © 2025 Stallion Asset Private Limited | All Rights Reserved
+      </div>
+  
+    </div>
+  </footer>
+  
