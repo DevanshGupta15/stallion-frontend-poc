@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
+import { FormsModule } from '@angular/forms';
 
 import { HttpClient } from '@angular/common/http';
 
@@ -12,7 +13,8 @@ import { HttpClient } from '@angular/common/http';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-  ],  templateUrl: './onboarding.component.html',
+    FormsModule
+  ], templateUrl: './onboarding.component.html',
   styleUrl: './onboarding.component.css'
 })
 export class OnboardingComponent {
@@ -29,17 +31,17 @@ export class OnboardingComponent {
     'NRI',
     'Partnership Firm'
   ];
-  
+
 
   form: any;
 
-  
 
 
- 
 
 
- 
+
+
+
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
@@ -75,10 +77,10 @@ export class OnboardingComponent {
     });
   }
 
-  
+
   investmentHorizons = ['1–3 Years', '3–5 Years', '5+ Years'];
   riskProfiles = ['Conservative', 'Moderate', 'Aggressive'];
-  
+
 
 
   submit() {
@@ -100,7 +102,7 @@ export class OnboardingComponent {
       JSON.stringify(this.form.value)
     );
 
-    const API_BASE_URL = 'https://stallion-poc-backend.vercel.app';
+    const API_BASE_URL = 'https://stallion-backend-poc.vercel.app';
 
     // Call backend validation API
     this.http.post<any>(`${API_BASE_URL}/submit`, this.form.value)
@@ -129,45 +131,78 @@ export class OnboardingComponent {
 
   savedLead: any = null;
 
-scrollToLeads() {
-  const data = sessionStorage.getItem('stallion_onboarding');
-  if (data) {
-    this.savedLead = JSON.parse(data);
-    setTimeout(() => {
-      document.getElementById('leadsSection')?.scrollIntoView({
-        behavior: 'smooth'
-      });
-    }, 100);
-  } else {
-    this.toastr.info('No saved leads found', 'Info');
+  scrollToLeads() {
+    const data = sessionStorage.getItem('stallion_onboarding');
+    if (data) {
+      this.savedLead = JSON.parse(data);
+      setTimeout(() => {
+        document.getElementById('leadsSection')?.scrollIntoView({
+          behavior: 'smooth'
+        });
+      }, 100);
+    } else {
+      this.toastr.info('No saved leads found', 'Info');
+    }
   }
-}
 
 
-chatbotOpen = false;
-chatbotAnswer = '';
+  chatbotOpen = false;
+  chatbotAnswer = '';
+  userMessage = '';
+  loading = false;
 
-toggleChatbot() {
-  this.chatbotOpen = !this.chatbotOpen;
-}
 
-selectQuestion(type: string) {
-  const answers: any = {
-    minInvestment:
-      'The minimum investment amount for Stallion PMS is ₹50,00,000 as per SEBI regulations.',
+  toggleChatbot() {
+    this.chatbotOpen = !this.chatbotOpen;
+  }
 
-    plans:
-      'Plan A charges 1.5% fixed fee with 15% profit sharing, while Plan B charges a flat 2.5% with no profit sharing.',
+  /** Send message to backend */
+  askBot(message: string) {
+    if (!message?.trim()) return;
 
-    timeline:
-      'Onboarding usually takes 1–2 working days after successful document verification.',
+    this.loading = true;
+    this.chatbotAnswer = '';
+    this.userMessage = '';
 
-    sebi:
-      'Yes. Stallion Asset is a SEBI-registered Portfolio Management Service (INP000006129).'
-  };
+    const API_BASE_URL = 'https://stallion-backend-poc.vercel.app';
 
-  this.chatbotAnswer = answers[type];
-}
+    this.http.post<any>(`${API_BASE_URL}/chat`, {
+      message
+    }).subscribe({
+      next: (res) => {
+        this.loading = false;
+
+        if (res.action === 'REDIRECT') {
+          window.location.href = res.url;
+          return;
+        }
+
+        this.chatbotAnswer = res.reply || 'Sorry, I could not understand.';
+      },
+      error: () => {
+        this.loading = false;
+        this.chatbotAnswer = 'Something went wrong. Please try again.';
+      }
+    });
+  }
+
+  /** Quick questions */
+  selectQuestion(type: string) {
+    const questions: any = {
+      minInvestment: 'What is the minimum investment for PMS?',
+      plans: 'What is the difference between Plan A and Plan B?',
+      timeline: 'How long does onboarding take?',
+      sebi: 'Is Stallion Asset SEBI registered?',
+      performance: 'Performance summary'
+    };
+
+    this.askBot(questions[type]);
+  }
+
+  /** User typed question */
+  sendUserMessage() {
+    this.askBot(this.userMessage);
+  }
 
 
 

@@ -199,49 +199,75 @@
   
 
       <!-- CHATBOT FAB -->
-<div class="chatbot-fab" (click)="toggleChatbot()">
-    💬
+<div class="chatbot-fab" (click)="toggleChatbot()">💬</div>
+
+<!-- CHATBOT WINDOW -->
+<div class="chatbot" [class.open]="chatbotOpen">
+
+  <div class="chatbot-header">
+    <span>Stallion AI Assistant (Demo)</span>
+    <button (click)="toggleChatbot()">✕</button>
   </div>
-  
-  <!-- CHATBOT WINDOW -->
-  <div class="chatbot" [class.open]="chatbotOpen">
-  
-    <div class="chatbot-header">
-      <span>Stallion AI Assistant demo</span>
-      <button (click)="toggleChatbot()">✕</button>
+
+  <div class="chatbot-body">
+
+    <div class="bot-msg">
+      👋 Hi! I can help you with PMS information and onboarding.
     </div>
-  
-    <div class="chatbot-body">
-  
-      <div class="bot-msg">
-        👋 Hi! I can help you with PMS onboarding.
-      </div>
-  
-      <div class="quick-questions">
-        <button (click)="selectQuestion('minInvestment')">
-          What is the minimum investment?
-        </button>
-  
-        <button (click)="selectQuestion('plans')">
-          Difference between Plan A & B?
-        </button>
-  
-        <button (click)="selectQuestion('timeline')">
-          How long does onboarding take?
-        </button>
-  
-        <button (click)="selectQuestion('sebi')">
-          Is Stallion SEBI registered?
-        </button>
-      </div>
-  
-      <div *ngIf="chatbotAnswer" class="bot-msg answer">
-        {{ chatbotAnswer }}
-      </div>
+
+    <!-- QUICK QUESTIONS -->
+    <div class="quick-questions">
+      <button (click)="selectQuestion('minInvestment')">
+        What is the minimum investment?
+      </button>
+
+      <button (click)="selectQuestion('plans')">
+        Difference between Plan A & B?
+      </button>
+
+      <button (click)="selectQuestion('timeline')">
+        How long does onboarding take?
+      </button>
+
+      <button (click)="selectQuestion('sebi')">
+        Is Stallion SEBI registered?
+      </button>
+
+      <button (click)="selectQuestion('performance')">
+        Performance summary
+      </button>
+
+      <!-- USER INPUT -->
+
   
     </div>
-  
+
+    <!-- LOADING -->
+    <div *ngIf="loading" class="bot-msg">
+      ⏳ Thinking...
+    </div>
+
+    <!-- ANSWER -->
+    <div *ngIf="chatbotAnswer && !loading" class="bot-msg answer">
+      {{ chatbotAnswer }}
+    </div>
+
   </div>
+
+  <div class="chat-input">
+    <input
+      type="text"
+      placeholder="Type your question..."
+      [(ngModel)]="userMessage"
+      (keyup.enter)="sendUserMessage()"
+      [disabled]="loading"
+    />
+    <button (click)="sendUserMessage()" [disabled]="loading">
+      ➤
+    </button>
+  </div>
+</div>
+
   
      <!-- LEADS VIEW -->
 <section

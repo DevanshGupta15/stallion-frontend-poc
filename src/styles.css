@@ -590,3 +590,38 @@ body {
     box-shadow: 0 2px 8px rgba(0,0,0,0.25);
   }
   
+
+  .chat-input {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  
+  .chat-input input {
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    font-size: 13px;
+  }
+  
+  .chat-input input:focus {
+    outline: none;
+    border-color: #6366f1;
+  }
+  
+  .chat-input button {
+    background: #111827;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0 12px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .chat-input button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
